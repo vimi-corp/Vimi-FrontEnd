@@ -1,0 +1,149 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── CSS Custom Properties ─────────────────────────────────────────────── */
+:root {
+  /* Sidebar width (referenced in layout calc) */
+  --sidebar-w: 15.5rem;
+
+  /* Canva brand tokens */
+  --purple:      #8B3DFF;
+  --purple-dark: #6020C8;
+  --cyan:        #00C4CC;
+  --pink:        #FF6B9D;
+
+  /* Scrollbar */
+  --scrollbar-track: #F3F5F7;
+  --scrollbar-thumb: #CBD5E1;
+}
+
+/* ── Base resets ────────────────────────────────────────────────────────── */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: #3D4451;
+    background-color: #F3F5F7;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: #1A1D23;
+    line-height: 1.25;
+  }
+
+  /* Thin, custom scrollbars on webkit */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 99px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #A0AEC0;
+  }
+
+  /* Remove number input spinners */
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Focus ring using Canva purple */
+  *:focus-visible {
+    outline: 2px solid var(--purple);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+/* ── Component layer ────────────────────────────────────────────────────── */
+@layer components {
+  /* Reusable gradient text utility */
+  .gradient-text {
+    background: linear-gradient(135deg, #8B3DFF 0%, #00C4CC 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Glassmorphism surface */
+  .glass {
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+  }
+
+  /* Card base */
+  .card {
+    @apply bg-surface-card rounded-2xl shadow-card border border-surface-border;
+  }
+
+  /* Primary CTA button */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2
+           px-5 py-2.5 rounded-xl font-display font-semibold text-sm text-white
+           bg-btn-primary shadow-purple-glow
+           transition-all duration-200
+           hover:shadow-lg hover:scale-[1.02] active:scale-[0.98];
+  }
+
+  /* Secondary button */
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2
+           px-5 py-2.5 rounded-xl font-display font-semibold text-sm
+           text-ink bg-surface-card border border-surface-border
+           transition-all duration-200
+           hover:bg-surface-hover hover:border-canva-purple/30 active:scale-[0.98];
+  }
+
+  /* Sidebar nav item */
+  .nav-item {
+    @apply flex items-center gap-3 px-3 py-2.5 rounded-xl
+           text-sm font-medium text-slate-300
+           transition-all duration-150 cursor-pointer
+           hover:bg-white/10 hover:text-white;
+  }
+
+  .nav-item.active {
+    @apply bg-white/15 text-white font-semibold;
+  }
+
+  /* Staggered fade-in for dashboard grid children */
+  .stagger-1 { animation-delay: 0.05s; }
+  .stagger-2 { animation-delay: 0.10s; }
+  .stagger-3 { animation-delay: 0.15s; }
+  .stagger-4 { animation-delay: 0.20s; }
+  .stagger-5 { animation-delay: 0.25s; }
+  .stagger-6 { animation-delay: 0.30s; }
+  .stagger-7 { animation-delay: 0.35s; }
+  .stagger-8 { animation-delay: 0.40s; }
+}
+
+/* ── Utility overrides ──────────────────────────────────────────────────── */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
