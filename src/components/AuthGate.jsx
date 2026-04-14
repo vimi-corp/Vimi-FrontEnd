@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import LoginPage    from './LoginPage';
-import RegisterPage from './RegisterPage';
-import { useAuth }  from '@/hooks/useAuth';
+import LoginPage    from '../pages/LoginPage';
+import RegisterPage from '../pages/RegisterPage';
+import { useAuth }  from '../lib/useAuth';
 
 // ── Full-screen auth spinner ──────────────────────────────────────────────
 const AuthLoader = () => (

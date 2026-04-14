@@ -60,7 +60,7 @@ export default function Header({ pageTitle = 'Home', isSidebarCollapsed = false 
       'h-16 px-6 bg-surface-card/90 backdrop-blur-sm',
       'border-b border-surface-border',
       'transition-all duration-300',
-      isSidebarCollapsed ? 'left-[4.5rem]' : 'left-[15.5rem]',
+      isSidebarCollapsed ? 'sm:left-[4.5rem] left-0' : 'sm:left-[260px] left-0',
     )}>
 
       {/* ── Breadcrumb ─────────────────────────────────────────────────── */}

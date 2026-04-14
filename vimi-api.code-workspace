@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"path": "../vimi-api"
+		},
+		{
+			"path": "."
+		}
+	],
+	"settings": {}
+}

@@ -1,10 +1,12 @@
-import React, { Suspense, lazy, createContext } from 'react';
-import { getSubdomain, isTenantDomain } from '@/lib/subdomain';
-import { AuthContext, useAuthProvider }  from '@/hooks/useAuth';
-import AuthGate                          from '@/pages/auth/AuthGate';
+import React, { Suspense, lazy } from 'react';
+import { getSubdomain, isTenantDomain } from './lib/subdomain';
+import { AuthContext, useAuthProvider } from './lib/useAuth';
+import AuthGate                         from './components/AuthGate';
+import VerifyEmail                      from './pages/VerifyEmail';
+import { Routes, Route, Navigate }      from 'react-router-dom';
 
-const MainDashboard    = lazy(() => import('@/layouts/DashboardLayout'));
-const StorefrontRouter = lazy(() => import('@/pages/StorefrontRouter'));
+const MainDashboard    = lazy(() => import('./components/DashboardLayout'));
+const StorefrontRouter = lazy(() => import('./components/StoreFrontRouter'));
 
 const AppLoader = () => (
   <div className="fixed inset-0 bg-[#F8F9FA] flex items-center justify-center">
@@ -39,12 +41,19 @@ export default function App() {
         // Public storefront — no auth required
         <StorefrontRouter subdomain={subdomain} />
       ) : (
-        // Merchant dashboard — auth required
-        <AuthProvider>
-          <AuthGate>
-            <MainDashboard />
-          </AuthGate>
-        </AuthProvider>
+        <Routes>
+          <Route path="/verify" element={<VerifyEmail />} />
+          <Route path="/*" element={
+            <AuthProvider>
+              <AuthGate>
+                <Routes>
+                  <Route path="/dashboard/*" element={<MainDashboard />} />
+                  <Route path="*" element={<Navigate to="/dashboard" replace />} />
+                </Routes>
+              </AuthGate>
+            </AuthProvider>
+          } />
+        </Routes>
       )}
     </Suspense>
   );

@@ -68,7 +68,7 @@ async function request(path, options = {}, retry = true) {
 
 async function refreshAccessToken() {
   const refresh_token = tokenStore.getRefresh();
-  const res = await fetch(`${API_BASE}/api/v1/auth/refresh`, {
+  const res = await fetch(`${API_BASE}/api/auth/refresh`, {
     method:      'POST',
     headers:     { 'Content-Type': 'application/json' },
     credentials: 'include',
@@ -93,61 +93,66 @@ export class ApiError extends Error {
 
 // ── Auth ──────────────────────────────────────────────────────────────────
 export const auth = {
-  register: (body)  => request('/api/v1/auth/register', { method: 'POST', body }),
+  register: (body)  => request('/api/auth/register', { method: 'POST', body }),
   login:    async (body) => {
-    const res = await request('/api/v1/auth/login', { method: 'POST', body });
+    const res = await request('/api/auth/login', { method: 'POST', body });
     tokenStore.set(res.data.access_token);
     if (res.data.refresh_token) tokenStore.setRefresh(res.data.refresh_token);
     return res;
   },
   logout: async () => {
-    await request('/api/v1/auth/logout', { method: 'POST' }).catch(() => {});
+    await request('/api/auth/logout', { method: 'POST' }).catch(() => {});
     tokenStore.clear();
   },
-  me: () => request('/api/v1/auth/me'),
+  me: () => request('/api/auth/me'),
 };
 
 // ── Stores ────────────────────────────────────────────────────────────────
 export const stores = {
-  list:         ()     => request('/api/v1/stores'),
-  get:          ()     => request('/api/v1/stores/me'),
-  create:       (body) => request('/api/v1/stores',          { method: 'POST',  body }),
-  update:       (body) => request('/api/v1/stores/me',       { method: 'PATCH', body }),
-  updateConfig: (body) => request('/api/v1/stores/me/config',{ method: 'PATCH', body }),
-  delete:       ()     => request('/api/v1/stores/me',       { method: 'DELETE' }),
+  list:         ()     => request('/api/stores'),
+  get:          ()     => request('/api/stores/me'),
+  create:       (body) => request('/api/stores',          { method: 'POST',  body }),
+  update:       (body) => request('/api/stores/me',       { method: 'PATCH', body }),
+  updateConfig: (body) => request('/api/stores/me/config',{ method: 'PATCH', body }),
+  delete:       ()     => request('/api/stores/me',       { method: 'DELETE' }),
 };
 
 // ── Products ──────────────────────────────────────────────────────────────
 export const products = {
-  list:         (params = {}) => request(`/api/v1/products?${new URLSearchParams(params)}`),
-  get:          (id)          => request(`/api/v1/products/${id}`),
-  create:       (body)        => request('/api/v1/products',           { method: 'POST',   body }),
-  update:       (id, body)    => request(`/api/v1/products/${id}`,     { method: 'PATCH',  body }),
-  delete:       (id)          => request(`/api/v1/products/${id}`,     { method: 'DELETE' }),
-  bulkStatus:   (ids, status) => request('/api/v1/products/bulk-status',{ method: 'POST',  body: { ids, status } }),
+  list:         (params = {}) => request(`/api/products?${new URLSearchParams(params)}`),
+  get:          (id)          => request(`/api/products/${id}`),
+  create:       (body)        => request('/api/products',           { method: 'POST',   body }),
+  update:       (id, body)    => request(`/api/products/${id}`,     { method: 'PATCH',  body }),
+  delete:       (id)          => request(`/api/products/${id}`,     { method: 'DELETE' }),
+  bulkStatus:   (ids, status) => request('/api/products/bulk-status',{ method: 'POST',  body: { ids, status } }),
 };
 
 // ── Orders ────────────────────────────────────────────────────────────────
 export const orders = {
-  list:         (params = {}) => request(`/api/v1/orders?${new URLSearchParams(params)}`),
-  get:          (id)          => request(`/api/v1/orders/${id}`),
-  create:       (body)        => request('/api/v1/orders',              { method: 'POST',  body }),
-  updateStatus: (id, body)    => request(`/api/v1/orders/${id}/status`, { method: 'PATCH', body }),
+  list:         (params = {}) => request(`/api/orders?${new URLSearchParams(params)}`),
+  get:          (id)          => request(`/api/orders/${id}`),
+  create:       (body)        => request('/api/orders',              { method: 'POST',  body }),
+  updateStatus: (id, body)    => request(`/api/orders/${id}/status`, { method: 'PATCH', body }),
 };
 
 // ── Customers ─────────────────────────────────────────────────────────────
 export const customers = {
-  list:   (params = {}) => request(`/api/v1/customers?${new URLSearchParams(params)}`),
-  get:    (id)          => request(`/api/v1/customers/${id}`),
-  update: (id, body)    => request(`/api/v1/customers/${id}`, { method: 'PATCH', body }),
+  list:   (params = {}) => request(`/api/customers?${new URLSearchParams(params)}`),
+  get:    (id)          => request(`/api/customers/${id}`),
+  update: (id, body)    => request(`/api/customers/${id}`, { method: 'PATCH', body }),
 };
 
 // ── Storefront (public — no auth) ─────────────────────────────────────────
 export const storefront = {
   resolve:     (slug, params = {}) =>
-    request(`/api/v1/storefront/${slug}?${new URLSearchParams(params)}`, {}, false),
+    request(`/api/storefront/${slug}?${new URLSearchParams(params)}`, {}, false),
   products:    (slug, params = {}) =>
-    request(`/api/v1/storefront/${slug}/products?${new URLSearchParams(params)}`, {}, false),
+    request(`/api/storefront/${slug}/products?${new URLSearchParams(params)}`, {}, false),
   product:     (slug, productSlug) =>
-    request(`/api/v1/storefront/${slug}/products/${productSlug}`, {}, false),
+    request(`/api/storefront/${slug}/products/${productSlug}`, {}, false),
+};
+
+// ── Dashboard Metrics ─────────────────────────────────────────────────────
+export const dashboard = {
+  metrics: () => request('/api/dashboard/metrics'),
 };

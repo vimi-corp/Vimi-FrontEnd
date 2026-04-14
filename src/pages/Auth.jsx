@@ -13,11 +13,12 @@ export default function Auth({ onLoginSuccess }) {
     setError('');
     setIsLoading(true);
     
-    // Gọi API xuống Backend ở cổng 4000
-    const endpoint = isLogin ? '/api/v1/auth/login' : '/api/v1/auth/register';
+    // Gọi API xuống Backend
+    const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register';
+    const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:4000';
     
     try {
-      const res = await fetch(`http://localhost:4000${endpoint}`, {
+      const res = await fetch(`${baseUrl}${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, createContext, useContext } from 'react';
-import { auth as authApi, tokenStore } from '@/lib/api';
+import { auth as authApi, tokenStore } from './api.js';
 
 // ---------------------------------------------------------------------------
 // AuthContext — provides { user, loading, login, register, logout } to the
@@ -45,7 +45,7 @@ export const useAuthProvider = () => {
   }, []);
 
   const register = useCallback(async (email, password, full_name) => {
-    const { data } = await authApi.register({ email, password, full_name });
+    const { data } = await authApi.register({ email, password, fullName: full_name });
     return data;
   }, []);
 
