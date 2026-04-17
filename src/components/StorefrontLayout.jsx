@@ -196,9 +196,7 @@ function StorefrontFooter({ store }) {
 }
 
 // ── Layout wrapper ────────────────────────────────────────────────────────
-export default function StorefrontLayout({ store, children }) {
-  const [cartOpen, setCartOpen] = useState(false);
-
+export default function StorefrontLayout({ store, cartCount, onCartOpen, children }) {
   return (
     <div
       className="min-h-screen flex flex-col"
@@ -220,7 +218,8 @@ export default function StorefrontLayout({ store, children }) {
 
       <StorefrontHeader
         store={store}
-        onCartOpen={() => setCartOpen(true)}
+        cartCount={cartCount}
+        onCartOpen={onCartOpen}
       />
 
       <main className="flex-1">

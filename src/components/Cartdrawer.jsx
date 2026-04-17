@@ -5,7 +5,7 @@ import clsx from 'clsx';
 const formatVND = (n) =>
   new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(n);
 
-export default function CartDrawer({ open, onClose, items = [], onUpdate, primaryColor = '#8B3DFF' }) {
+export default function CartDrawer({ open, onClose, items = [], onUpdate, onCheckout, primaryColor = '#8B3DFF' }) {
   const subtotal = items.reduce((sum, item) => sum + Number(item.price) * item.qty, 0);
 
   return (
@@ -109,6 +109,7 @@ export default function CartDrawer({ open, onClose, items = [], onUpdate, primar
             </div>
             <p className="text-xs text-gray-400">Shipping calculated at checkout</p>
             <button
+              onClick={onCheckout}
               className="w-full flex items-center justify-center gap-2 py-3 rounded-xl
                          text-white font-semibold text-sm
                          hover:opacity-90 active:scale-[0.98] transition-all duration-150"

@@ -7,6 +7,12 @@ import { Routes, Route, Navigate }      from 'react-router-dom';
 
 const MainDashboard    = lazy(() => import('./components/DashboardLayout'));
 const StorefrontRouter = lazy(() => import('./components/StoreFrontRouter'));
+const TemplateGallery  = lazy(() => import('./pages/onboarding/TemplateGallery'));
+const CustomizeWizard  = lazy(() => import('./pages/onboarding/CustomizeWizard'));
+const PricingPage      = lazy(() => import('./pages/Pricing'));
+const ForgotPassword   = lazy(() => import('./pages/auth/ForgotPassword'));
+const ResetPassword    = lazy(() => import('./pages/auth/ResetPassword'));
+const OAuth2Callback   = lazy(() => import('./pages/auth/OAuth2Callback'));
 
 const AppLoader = () => (
   <div className="fixed inset-0 bg-[#F8F9FA] flex items-center justify-center">
@@ -42,11 +48,18 @@ export default function App() {
         <StorefrontRouter subdomain={subdomain} />
       ) : (
         <Routes>
-          <Route path="/verify" element={<VerifyEmail />} />
+          <Route path="/verify"                element={<VerifyEmail />} />
+          <Route path="/pricing"                element={<PricingPage />} />
+          <Route path="/forgot-password"        element={<ForgotPassword />} />
+          <Route path="/reset-password"         element={<ResetPassword />} />
+          <Route path="/auth/oauth2/callback"   element={<OAuth2Callback />} />
           <Route path="/*" element={
             <AuthProvider>
               <AuthGate>
                 <Routes>
+                  <Route path="/onboarding" element={<TemplateGallery />} />
+                  <Route path="/onboarding/templates" element={<TemplateGallery />} />
+                  <Route path="/onboarding/customize/:templateId" element={<CustomizeWizard />} />
                   <Route path="/dashboard/*" element={<MainDashboard />} />
                   <Route path="*" element={<Navigate to="/dashboard" replace />} />
                 </Routes>

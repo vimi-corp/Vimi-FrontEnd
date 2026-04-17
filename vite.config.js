@@ -18,9 +18,19 @@ export default defineConfig({
     // (pair with a /etc/hosts entry: 127.0.0.1 hoangshop.localhost)
     allowedHosts: ['.localhost', '.vimi.id.vn'],
     proxy: {
-      // All /api calls go to the Express backend during local dev
+      // OAuth2 authorization flow — proxy to backend, browser follows the 302 to Google natively
+      '/api/oauth2': {
+        target:       'http://localhost:4000',
+        changeOrigin: false,
+      },
+      // OAuth2 callback route — must also be proxied back to backend
+      '/login/oauth2': {
+        target:       'http://localhost:4000',
+        changeOrigin: false,
+      },
+      // All other /api calls go to the Spring Boot backend
       '/api': {
-        target:      'http://localhost:4000',
+        target:       'http://localhost:4000',
         changeOrigin: true,
       },
     },

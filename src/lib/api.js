@@ -11,7 +11,7 @@
 //     mounted component can redirect to login without circular imports.
 // ---------------------------------------------------------------------------
 
-const API_BASE = import.meta.env.VITE_API_URL ?? 'https://api.stablecast.id.vn';
+const API_BASE = import.meta.env.VITE_API_URL ?? '';
 
 // ── Token storage ─────────────────────────────────────────────────────────
 const TOKEN_KEY   = 'vimi_access_token';
@@ -93,8 +93,8 @@ export class ApiError extends Error {
 
 // ── Auth ──────────────────────────────────────────────────────────────────
 export const auth = {
-  register: (body)  => request('/api/auth/register', { method: 'POST', body }),
-  login:    async (body) => {
+  register:       (body)  => request('/api/auth/register',        { method: 'POST', body }),
+  login:          async (body) => {
     const res = await request('/api/auth/login', { method: 'POST', body });
     tokenStore.set(res.data.access_token);
     if (res.data.refresh_token) tokenStore.setRefresh(res.data.refresh_token);
@@ -104,7 +104,13 @@ export const auth = {
     await request('/api/auth/logout', { method: 'POST' }).catch(() => {});
     tokenStore.clear();
   },
-  me: () => request('/api/auth/me'),
+  me:             ()      => request('/api/auth/me'),
+  forgotPassword: (body)  => request('/api/auth/forgot-password',  { method: 'POST', body }),
+  resetPassword:  (body)  => request('/api/auth/reset-password',   { method: 'POST', body }),
+};
+
+export const users = {
+  updateMe: (body) => request('/api/users/me', { method: 'PATCH', body })
 };
 
 // ── Stores ────────────────────────────────────────────────────────────────
@@ -156,3 +162,20 @@ export const storefront = {
 export const dashboard = {
   metrics: () => request('/api/dashboard/metrics'),
 };
+
+export const subscription = {
+  get: () => request('/api/store/subscription'),
+  cancel: () => request('/api/store/subscription/cancel', { method: 'POST' }),
+  renew: () => request('/api/store/subscription/renew', { method: 'POST' })
+}
+
+const api = {
+  get: (path, options = {}) => request(path, { ...options, method: 'GET' }),
+  post: (path, body, options = {}) => request(path, { ...options, method: 'POST', body }),
+  patch: (path, body, options = {}) => request(path, { ...options, method: 'PATCH', body }),
+  delete: (path, options = {}) => request(path, { ...options, method: 'DELETE' }),
+  getUserStores: () => request('/api/stores/all'), // Backend expects /api/stores/all
+  switchStore: (storeId) => request('/api/auth/switch-store', { method: 'POST', body: { storeId } })
+};
+
+export default api;

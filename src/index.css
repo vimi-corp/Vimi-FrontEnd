@@ -16,7 +16,144 @@
   /* Scrollbar */
   --scrollbar-track: #F3F5F7;
   --scrollbar-thumb: #CBD5E1;
+
+  /* ── Theme CSS variables (set by ThemeContext) ── */
+  --theme-bg:                  #FAFAFC;
+  --theme-surface:             #ffffff;
+  --theme-accent:              #8B3DFF;
+  --theme-accent-2:            #00C4CC;
+  --theme-text:                #0f172a;
+  --theme-text-muted:          #64748b;
+  --theme-border:              #e2e8f0;
+  --theme-sidebar-bg:          #ffffff;
+  --theme-sidebar-text:        #0f172a;
+  --theme-sidebar-active-bg:   rgba(37,99,235,0.07);
+  --theme-sidebar-active-text: #2563eb;
 }
+
+/* ── Smooth theme transitions ──────────────────────────────────────────── */
+/* These transitions fire whenever ThemeContext updates the CSS variables   */
+html {
+  transition:
+    background-color 1.2s cubic-bezier(0.4, 0, 0.2, 1),
+    color            1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body {
+  background-color: var(--theme-bg);
+  color: var(--theme-text);
+  transition:
+    background-color 1.2s cubic-bezier(0.4, 0, 0.2, 1),
+    color            1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Every surface that should morph with the theme */
+.theme-bg       { background-color: var(--theme-bg) !important;       transition: background-color 1.2s cubic-bezier(0.4, 0, 0.2, 1); }
+.theme-surface  { background-color: var(--theme-surface) !important;  transition: background-color 1.2s cubic-bezier(0.4, 0, 0.2, 1); }
+.theme-sidebar  { background-color: var(--theme-sidebar-bg) !important; border-color: var(--theme-border) !important; transition: background-color 1.2s cubic-bezier(0.4, 0, 0.2, 1), border-color 1.2s cubic-bezier(0.4, 0, 0.2, 1); }
+.theme-text     { color: var(--theme-text) !important;                transition: color 1.2s cubic-bezier(0.4, 0, 0.2, 1); }
+.theme-border   { border-color: var(--theme-border) !important;       transition: border-color 1.2s cubic-bezier(0.4, 0, 0.2, 1); }
+
+/* ── Global data-theme overrides ─────────────────────────────────────────────
+   Rules are ordered: backgrounds → borders → text.
+   Business overrides are comprehensive for a true dark-mode experience.       */
+
+/* ─ Card surfaces (bg-white) ─────────────────────────────────────────────── */
+[data-theme="premium"] .bg-white { background-color: var(--theme-surface) !important; }
+[data-theme="business"] .bg-white { background-color: var(--theme-surface) !important; }
+
+/* ─ Glassmorphism panels (.glass) ──────────────────────────────────────────── */
+[data-theme="business"] .glass {
+  background: rgba(14, 14, 18, 0.94) !important;
+  border: 1px solid rgba(255,255,255,0.07) !important;
+  backdrop-filter: blur(16px) !important;
+}
+[data-theme="premium"] .glass {
+  background: rgba(245, 240, 255, 0.88) !important;
+  border: 1px solid rgba(139,92,246,0.15) !important;
+}
+
+/* ─ Nav + aside ───────────────────────────────────────────────────────────── */
+[data-theme="business"] nav {
+  background: rgba(8, 8, 10, 0.96) !important;
+  border-color: rgba(255,255,255,0.06) !important;
+}
+[data-theme="business"] aside {
+  background-color: rgba(8, 8, 10, 0.98) !important;
+  border-color: rgba(255,255,255,0.06) !important;
+}
+
+/* ─ Semi-transparent whites ─────────────────────────────────────────────── */
+[data-theme="business"] .bg-white\/70,
+[data-theme="business"] .bg-white\/80,
+[data-theme="business"] .bg-white\/90 {
+  background-color: rgba(12, 12, 16, 0.92) !important;
+}
+
+/* ─ Slate bg utility classes ─────────────────────────────────────────────── */
+[data-theme="business"] .bg-slate-50  { background-color: #0f0f14 !important; }
+[data-theme="business"] .bg-slate-100 { background-color: #141419 !important; }
+[data-theme="business"] .bg-slate-200 { background-color: #1a1a22 !important; }
+[data-theme="premium"]  .bg-slate-50  { background-color: color-mix(in srgb, var(--theme-bg) 60%, var(--theme-surface)) !important; }
+[data-theme="premium"]  .bg-slate-100 { background-color: color-mix(in srgb, var(--theme-bg) 40%, var(--theme-surface)) !important; }
+
+/* ─ Tailwind surface tokens ─────────────────────────────────────────────── */
+[data-theme="business"] .bg-surface-page,
+[data-theme="business"] .bg-surface-card,
+[data-theme="business"] .bg-surface-overlay { background-color: var(--theme-surface) !important; }
+
+/* ─ bg-white\/90 for table rows / header ─────────────────────────────────── */
+[data-theme="business"] .bg-white\/90 { background-color: rgba(14, 14, 18, 0.92) !important; }
+[data-theme="premium"]  .bg-white\/90 { background-color: color-mix(in srgb, var(--theme-surface) 90%, transparent) !important; }
+
+/* ─ Borders ──────────────────────────────────────────────────────────────── */
+[data-theme="business"] .border-slate-100,
+[data-theme="business"] .border-slate-200,
+[data-theme="business"] .border-surface-border { border-color: rgba(255,255,255,0.07) !important; }
+[data-theme="premium"]  .border-slate-100,
+[data-theme="premium"]  .border-slate-200 { border-color: var(--theme-border) !important; }
+
+/* ─ Input fields ─────────────────────────────────────────────────────────── */
+[data-theme="business"] input[type="text"],
+[data-theme="business"] input[type="email"],
+[data-theme="business"] input[type="password"],
+[data-theme="business"] input[type="search"] {
+  background-color: #13131a !important;
+  color: #e2e8f0 !important;
+  border-color: rgba(255,255,255,0.09) !important;
+}
+[data-theme="business"] input::placeholder { color: #4a5568 !important; }
+
+/* ─ Headings in business dark ───────────────────────────────────────────── */
+[data-theme="business"] h1,
+[data-theme="business"] h2,
+[data-theme="business"] h3 { color: #f1f5f9 !important; }
+
+/* ─ Dark text → light in business ──────────────────────────────────────── */
+[data-theme="business"] .text-slate-800,
+[data-theme="business"] .text-slate-700,
+[data-theme="business"] .text-ink,
+[data-theme="business"] .text-ink-body { color: #e2e8f0 !important; }
+[data-theme="premium"]  .text-slate-800,
+[data-theme="premium"]  .text-slate-700,
+[data-theme="premium"]  .text-ink       { color: var(--theme-text) !important; }
+
+/* ─ Muted text ───────────────────────────────────────────────────────────── */
+[data-theme="business"] .text-slate-500,
+[data-theme="business"] .text-slate-400,
+[data-theme="business"] .text-ink-muted,
+[data-theme="business"] .text-ink-subtle { color: #64748b !important; }
+[data-theme="premium"]  .text-slate-500,
+[data-theme="premium"]  .text-slate-400,
+[data-theme="premium"]  .text-ink-muted  { color: var(--theme-text-muted) !important; }
+
+/* ─ Table rows ────────────────────────────────────────────────────────────── */
+[data-theme="premium"]  tr,
+[data-theme="business"] tr { transition: background-color 1.2s cubic-bezier(0.4, 0, 0.2, 1); }
+
+/* ─ Dropdown menus ───────────────────────────────────────────────────────── */
+[data-theme="business"] .shadow-modal { background-color: #111116 !important; }
+
 
 /* ── Base resets ────────────────────────────────────────────────────────── */
 @layer base {

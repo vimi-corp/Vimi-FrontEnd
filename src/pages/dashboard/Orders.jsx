@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Search, ShoppingBag, Eye } from 'lucide-react';
+import { Search, ShoppingBag, Eye, X, Package } from 'lucide-react';
 import { orders } from '../../lib/api';
 
 export default function Orders() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedOrder, setSelectedOrder] = useState(null);
 
   useEffect(() => {
     orders.list()
@@ -51,11 +52,16 @@ export default function Orders() {
             </thead>
             <tbody className="divide-y divide-slate-100">
               {loading ? (
-                <tr>
-                  <td colSpan="6" className="px-6 py-12 text-center">
-                     <div className="flex justify-center"><div className="w-6 h-6 border-2 border-[#8B3DFF] border-t-transparent rounded-full animate-spin"></div></div>
-                  </td>
-                </tr>
+                Array.from({ length: 4 }).map((_, i) => (
+                  <tr key={i} className="animate-pulse">
+                    <td className="px-6 py-5"><div className="h-4 bg-slate-200 rounded w-20"></div></td>
+                    <td className="px-6 py-5"><div className="h-4 bg-slate-200 rounded w-32"></div></td>
+                    <td className="px-6 py-5"><div className="h-4 bg-slate-200 rounded w-24"></div></td>
+                    <td className="px-6 py-5"><div className="h-4 bg-slate-200 rounded w-20"></div></td>
+                    <td className="px-6 py-5"><div className="h-6 bg-slate-200 rounded w-16 mx-auto"></div></td>
+                    <td className="px-6 py-5"><div className="h-8 bg-slate-200 rounded w-8 ml-auto"></div></td>
+                  </tr>
+                ))
               ) : items.length === 0 ? (
                 <tr>
                   <td colSpan="6" className="px-6 py-16 text-center text-slate-500">
@@ -81,7 +87,10 @@ export default function Orders() {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <button className="text-slate-400 hover:text-[#8B3DFF] transition-colors p-1 rounded hover:bg-[#8B3DFF]/10">
+                      <button 
+                        onClick={() => setSelectedOrder(o)}
+                        className="text-slate-400 hover:text-[#8B3DFF] transition-colors p-1 rounded hover:bg-[#8B3DFF]/10"
+                      >
                         <Eye size={18} />
                       </button>
                     </td>
@@ -92,6 +101,97 @@ export default function Orders() {
           </table>
         </div>
       </div>
+
+      {/* Order Details Modal */}
+      {selectedOrder && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4 animate-fade-in-fast">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div className="flex items-center justify-between p-5 border-b border-slate-100 bg-slate-50/50">
+              <h2 className="text-lg font-bold text-slate-800">Order #{selectedOrder.id}</h2>
+              <button 
+                onClick={() => setSelectedOrder(null)}
+                className="text-slate-400 hover:text-slate-700 hover:bg-slate-100 p-1.5 rounded-lg transition-colors"
+              >
+                <X size={20} />
+              </button>
+            </div>
+            
+            <div className="p-5 overflow-y-auto flex-1">
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <div className="bg-slate-50 rounded-xl p-4 border border-slate-100">
+                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Customer</p>
+                  <p className="font-medium text-slate-800">{selectedOrder.customerName || 'Guest User'}</p>
+                </div>
+                <div className="bg-slate-50 rounded-xl p-4 border border-slate-100">
+                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Order Date</p>
+                  <p className="font-medium text-slate-800">{new Date(selectedOrder.createdAt).toLocaleString()}</p>
+                </div>
+              </div>
+
+              <h3 className="text-sm font-bold text-slate-800 mb-3 uppercase tracking-wide">Line Items</h3>
+              <div className="border border-slate-100 rounded-xl overflow-hidden">
+                <table className="w-full text-left text-sm text-slate-600">
+                  <thead className="bg-[#F8F9FA] border-b border-slate-100">
+                    <tr>
+                      <th className="px-4 py-3 font-semibold text-slate-500">Item</th>
+                      <th className="px-4 py-3 font-semibold text-slate-500 text-center">Qty</th>
+                      <th className="px-4 py-3 font-semibold text-slate-500 text-right">Price</th>
+                      <th className="px-4 py-3 font-semibold text-slate-500 text-right">Total</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {/* STUB DATA FOR LINE ITEMS */}
+                    <tr>
+                      <td className="px-4 py-3 font-medium text-slate-800 flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center">
+                          <Package size={14} className="text-slate-400" />
+                        </div>
+                        Sample Product Element
+                      </td>
+                      <td className="px-4 py-3 text-center">1</td>
+                      <td className="px-4 py-3 text-right">₫{((selectedOrder.total || 0) * 0.4).toLocaleString()}</td>
+                      <td className="px-4 py-3 text-right font-medium text-slate-800">₫{((selectedOrder.total || 0) * 0.4).toLocaleString()}</td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-3 font-medium text-slate-800 flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center">
+                          <Package size={14} className="text-slate-400" />
+                        </div>
+                        Secondary Item Component
+                      </td>
+                      <td className="px-4 py-3 text-center">2</td>
+                      <td className="px-4 py-3 text-right">₫{((selectedOrder.total || 0) * 0.3).toLocaleString()}</td>
+                      <td className="px-4 py-3 text-right font-medium text-slate-800">₫{((selectedOrder.total || 0) * 0.6).toLocaleString()}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              
+              <div className="mt-5 flex justify-end">
+                <div className="text-right w-1/2">
+                   <div className="flex justify-between py-2 text-sm text-slate-500">
+                      <span>Subtotal</span>
+                      <span>₫{(selectedOrder.total || 0).toLocaleString()}</span>
+                   </div>
+                   <div className="flex justify-between p-3 bg-slate-50 rounded-lg text-sm font-bold text-slate-800 mt-2">
+                      <span>Total Amount</span>
+                      <span className="text-[#8B3DFF]">₫{(selectedOrder.total || 0).toLocaleString()}</span>
+                   </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="p-4 border-t border-slate-100 bg-slate-50/50 flex justify-end gap-3">
+              <button 
+                onClick={() => setSelectedOrder(null)}
+                className="px-5 py-2 rounded-xl text-sm font-semibold text-slate-600 bg-white border border-slate-200 hover:bg-slate-50 transition-colors"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
